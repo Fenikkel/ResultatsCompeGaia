@@ -214,20 +214,20 @@ tbody tr:last-child td {
 
 .paginacio {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: center;
   gap: 12px;
   margin-top: 16px;
 }
 
 .boto-fletxa {
-  width: 48px;
-  min-height: 48px;
+  width: 44px;
+  min-height: 44px;
   padding: 0;
   border: 1px solid var(--text);
   background: var(--background);
   color: var(--text);
-  font-size: 1.35rem;
+  font-size: 1.6rem;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
