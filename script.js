@@ -201,7 +201,7 @@ function creaBlobRanquing(resultat) {
   blob.style.setProperty('--escala-y-blob-a', (0.85 + aleatori() * 0.3).toFixed(2));
   blob.style.setProperty('--escala-x-blob-b', (0.85 + aleatori() * 0.3).toFixed(2));
   blob.style.setProperty('--escala-y-blob-b', (0.85 + aleatori() * 0.3).toFixed(2));
-  blob.style.setProperty('--retard-blob', `${(-aleatori() * 3).toFixed(2)}s`);
+  blob.style.setProperty('--retard-blob', `${(-aleatori() * 9).toFixed(2)}s`);
   return blob;
 }
 

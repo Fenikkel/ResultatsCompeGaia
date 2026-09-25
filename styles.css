@@ -221,7 +221,7 @@ tbody tr:last-child td {
   width: 24px;
   height: 20px;
   flex: 0 0 auto;
-  animation: anima-blob 3s ease-in-out var(--retard-blob) infinite;
+  animation: anima-blob 9s ease-in-out var(--retard-blob) infinite;
   will-change: border-radius, transform;
 }
 
