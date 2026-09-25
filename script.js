@@ -243,12 +243,11 @@ function creaBarra(dades, maxim) {
   item.setAttribute('role', 'listitem');
   item.setAttribute(
     'aria-label',
-    `${dades.etiqueta}: ${dades.zones} en zona sense top, ${dades.tops} en top, ${dades.total} en total.`
+    `${dades.etiqueta}: ${dades.zones} en zona, ${dades.tops} en top, ${dades.total} en total.`
   );
 
   const area = document.createElement('div');
   area.className = 'barra-area';
-  area.setAttribute('aria-hidden', 'true');
   const escala = document.createElement('div');
   escala.className = 'barra-escala';
 
@@ -256,6 +255,7 @@ function creaBarra(dades, maxim) {
   const total = document.createElement('span');
   total.className = 'total-barra';
   total.textContent = String(dades.total);
+  total.setAttribute('aria-hidden', 'true');
   total.style.bottom = `calc(${percentatge}% + 5px)`;
 
   const barra = document.createElement('div');
@@ -263,15 +263,27 @@ function creaBarra(dades, maxim) {
   barra.style.height = `${percentatge}%`;
 
   if (dades.tops > 0) {
-    const segmentTop = document.createElement('span');
+    const segmentTop = document.createElement('button');
+    segmentTop.type = 'button';
     segmentTop.className = 'segment segment-top';
     segmentTop.style.flexGrow = String(dades.tops);
+    segmentTop.setAttribute('aria-label', `${dades.etiqueta}, Top: ${dades.tops}`);
+    const valorTop = document.createElement('span');
+    valorTop.className = 'valor-segment';
+    valorTop.textContent = String(dades.tops);
+    segmentTop.append(valorTop);
     barra.append(segmentTop);
   }
   if (dades.zones > 0) {
-    const segmentZona = document.createElement('span');
+    const segmentZona = document.createElement('button');
+    segmentZona.type = 'button';
     segmentZona.className = 'segment segment-zona';
     segmentZona.style.flexGrow = String(dades.zones);
+    segmentZona.setAttribute('aria-label', `${dades.etiqueta}, Zona: ${dades.zones}`);
+    const valorZona = document.createElement('span');
+    valorZona.className = 'valor-segment';
+    valorZona.textContent = String(dades.zones);
+    segmentZona.append(valorZona);
     barra.append(segmentZona);
   }
 
@@ -282,15 +294,7 @@ function creaBarra(dades, maxim) {
   etiqueta.className = 'etiqueta-barra';
   etiqueta.textContent = dades.etiqueta;
 
-  const valors = document.createElement('span');
-  valors.className = 'valors-barra';
-  const zones = document.createElement('span');
-  zones.textContent = `Z: ${dades.zones}`;
-  const tops = document.createElement('span');
-  tops.textContent = `T: ${dades.tops}`;
-  valors.append(zones, tops);
-
-  item.append(area, etiqueta, valors);
+  item.append(area, etiqueta);
   return item;
 }
 
@@ -489,6 +493,16 @@ elements.graficSeguent.addEventListener('click', () => {
     paginaGraficActual += 1;
     renderitzaGrafic(true);
   }
+});
+
+elements.grafic.addEventListener('click', event => {
+  const segment = event.target.closest('.segment');
+  if (!segment) return;
+  const jaEstavaActiu = segment.classList.contains('segment-actiu');
+  for (const segmentActiu of elements.grafic.querySelectorAll('.segment-actiu')) {
+    segmentActiu.classList.remove('segment-actiu');
+  }
+  if (!jaEstavaActiu) segment.classList.add('segment-actiu');
 });
 
 elements.reintentar.addEventListener('click', carrega);
