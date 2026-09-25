@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ca-valencia">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Rànquing i estadístiques de la competició de socis de Gaia Climb d’octubre de 2026.">
+  <title>Resultats competició socis octubre 2026 · Gaia Climb</title>
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="capcalera">
+      <img class="logo" src="LOGO.png" alt="Gaia Climb" width="355" height="315">
+      <h1>Resultats competició socis octubre 2026</h1>
+    </header>
+
+    <noscript>
+      <p class="missatge missatge-error">Cal activar JavaScript per a consultar els resultats.</p>
+    </noscript>
+
+    <section id="estat-carrega" class="missatge" aria-live="polite" aria-atomic="true" hidden>
+      <p id="text-estat">Carregant resultats…</p>
+      <button id="reintentar" class="boto-secundari" type="button" hidden>Torna-ho a provar</button>
+    </section>
+
+    <div id="contingut" hidden>
+      <p id="sense-resultats" class="missatge" role="status" hidden>
+        Encara no hi ha resultats guardats.
+      </p>
+
+      <section class="seccio" aria-labelledby="titol-ranquing">
+        <h2 id="titol-ranquing">Rànquing</h2>
+
+        <div class="pestanyes" role="tablist" aria-label="Categories del rànquing">
+          <button id="pestanya-general" class="pestanya" type="button" role="tab"
+            aria-selected="true" aria-controls="panell-ranquing" tabindex="0" data-categoria="General">
+            General
+          </button>
+          <button id="pestanya-femeni" class="pestanya" type="button" role="tab"
+            aria-selected="false" aria-controls="panell-ranquing" tabindex="-1" data-categoria="Femení">
+            Femení
+          </button>
+          <button id="pestanya-masculi" class="pestanya" type="button" role="tab"
+            aria-selected="false" aria-controls="panell-ranquing" tabindex="-1" data-categoria="Masculí">
+            Masculí
+          </button>
+        </div>
+
+        <div id="panell-ranquing" class="panell-ranquing" role="tabpanel"
+          aria-labelledby="pestanya-general" tabindex="0">
+          <table>
+            <caption class="visually-hidden">Classificació de la categoria General</caption>
+            <thead>
+              <tr>
+                <th scope="col">Posició</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Punts</th>
+              </tr>
+            </thead>
+            <tbody id="cos-ranquing"></tbody>
+          </table>
+        </div>
+
+        <nav class="paginacio" aria-label="Paginació del rànquing">
+          <button id="ranquing-anterior" class="boto-fletxa" type="button" aria-label="Pàgina anterior del rànquing">←</button>
+          <span id="pagina-ranquing" class="indicador-pagina" aria-live="polite">Pàgina 0 de 0</span>
+          <button id="ranquing-seguent" class="boto-fletxa" type="button" aria-label="Pàgina següent del rànquing">→</button>
+        </nav>
+      </section>
+
+      <section class="seccio" aria-labelledby="titol-estadistiques">
+        <h2 id="titol-estadistiques">Estadístiques</h2>
+
+        <dl class="resum-estadistiques">
+          <div>
+            <dt>Participants</dt>
+            <dd id="total-participants">0</dd>
+          </div>
+          <div>
+            <dt>Puntuació mitjana</dt>
+            <dd id="puntuacio-mitjana">0,0 punts</dd>
+          </div>
+        </dl>
+
+        <figure class="figura-grafic" aria-labelledby="titol-grafic" aria-describedby="descripcio-grafic">
+          <figcaption id="titol-grafic">Resultats per bloc i via</figcaption>
+          <p id="descripcio-grafic" class="visually-hidden">
+            Gràfic de barres apilades amb la quantitat de zones sense top i de tops.
+          </p>
+
+          <ul class="llegenda" aria-label="Llegenda del gràfic">
+            <li><span class="mostra mostra-zona" aria-hidden="true"></span>Zona sense top</li>
+            <li><span class="mostra mostra-top" aria-hidden="true"></span>Top</li>
+          </ul>
+
+          <div class="area-grafic">
+            <div class="escala" aria-hidden="true">
+              <span id="maxim-escala">0</span>
+              <span>0</span>
+            </div>
+            <div id="grafic" class="grafic" role="list" aria-label="Resultats dels problemes"></div>
+          </div>
+
+          <nav class="paginacio" aria-label="Paginació del gràfic">
+            <button id="grafic-anterior" class="boto-fletxa" type="button" aria-label="Pàgina anterior del gràfic">←</button>
+            <span id="pagina-grafic" class="indicador-pagina" aria-live="polite">Pàgina 1 de 3</span>
+            <button id="grafic-seguent" class="boto-fletxa" type="button" aria-label="Pàgina següent del gràfic">→</button>
+          </nav>
+        </figure>
+      </section>
+    </div>
+
+    <p id="anunci-canvis" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
+  </main>
+</body>
+</html>
