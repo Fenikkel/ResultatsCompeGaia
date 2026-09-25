@@ -6,6 +6,7 @@ const FILES_PER_REQUEST = 500;
 const RESULTATS_PER_PAGINA = 5;
 const TEMPS_MAXIM_CARREGA = 20000;
 const DURACIO_RECOMPTE = 900;
+const LLAVOR_BLOBS = String(Date.now());
 const CATEGORIES = ['General', 'Femení', 'Masculí'];
 const CAMPS_PUBLICS = [
   'id', 'nombre', 'genero',
@@ -162,6 +163,64 @@ function creaCelda(text, classe) {
   return celda;
 }
 
+function hashText(text) {
+  let hash = 2166136261;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function creaGenerador(seedInicial) {
+  let seed = seedInicial || 1;
+  return () => {
+    seed ^= seed << 13;
+    seed ^= seed >>> 17;
+    seed ^= seed << 5;
+    return (seed >>> 0) / 4294967296;
+  };
+}
+
+function creaBlobRanquing(resultat) {
+  const blob = document.createElement('span');
+  blob.className = `blob-ranquing blob-posicio-${resultat.posicio}`;
+  blob.setAttribute('aria-hidden', 'true');
+
+  const aleatori = creaGenerador(hashText(`${LLAVOR_BLOBS}-${resultat.id}-${resultat.posicio}`));
+  function creaForma() {
+    const radis = Array.from({ length: 8 }, () => `${Math.round(15 + aleatori() * 70)}%`);
+    return `${radis.slice(0, 4).join(' ')} / ${radis.slice(4).join(' ')}`;
+  }
+
+  blob.style.setProperty('--forma-blob-a', creaForma());
+  blob.style.setProperty('--forma-blob-b', creaForma());
+  blob.style.setProperty('--gir-blob-a', `${Math.round(-18 + aleatori() * 36)}deg`);
+  blob.style.setProperty('--gir-blob-b', `${Math.round(-18 + aleatori() * 36)}deg`);
+  blob.style.setProperty('--escala-x-blob-a', (0.85 + aleatori() * 0.3).toFixed(2));
+  blob.style.setProperty('--escala-y-blob-a', (0.85 + aleatori() * 0.3).toFixed(2));
+  blob.style.setProperty('--escala-x-blob-b', (0.85 + aleatori() * 0.3).toFixed(2));
+  blob.style.setProperty('--escala-y-blob-b', (0.85 + aleatori() * 0.3).toFixed(2));
+  blob.style.setProperty('--retard-blob', `${(-aleatori() * 3).toFixed(2)}s`);
+  return blob;
+}
+
+function creaCeldaPuntuacio(resultat) {
+  const celda = document.createElement('td');
+  const contingut = document.createElement('span');
+  contingut.className = 'contingut-puntuacio';
+
+  if (resultat.posicio >= 1 && resultat.posicio <= 3) {
+    contingut.append(creaBlobRanquing(resultat));
+  }
+
+  const puntuacio = document.createElement('span');
+  puntuacio.textContent = String(resultat.total);
+  contingut.append(puntuacio);
+  celda.append(contingut);
+  return celda;
+}
+
 function renderitzaRanquing(anuncia = false) {
   const ranquing = calculaRanquing(categoriaActual);
   const totalPagines = Math.ceil(ranquing.length / RESULTATS_PER_PAGINA);
@@ -191,7 +250,7 @@ function renderitzaRanquing(anuncia = false) {
       nom.textContent = resultat.nombre;
       nom.title = resultat.nombre;
       celdaNom.append(nom);
-      fila.append(celdaNom, creaCelda(String(resultat.total)));
+      fila.append(celdaNom, creaCeldaPuntuacio(resultat));
       elements.cosRanquing.append(fila);
     }
   }
