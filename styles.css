@@ -341,21 +341,49 @@ tbody tr:last-child td {
 
 .area-grafic {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 4px;
   min-width: 0;
 }
 
 .escala {
+  position: relative;
   display: flex;
   height: 220px;
-  padding: 24px 0 1px;
+  padding: 24px 10px 1px 0;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
   color: var(--muted);
   font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
+}
+
+.escala::before {
+  content: "";
+  position: absolute;
+  top: 24px;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--soft-border);
+  pointer-events: none;
+}
+
+.escala::after {
+  content: "";
+  position: absolute;
+  top: 24px;
+  right: 0;
+  width: 7px;
+  height: 1px;
+  background: var(--soft-border);
+  box-shadow:
+    0 49px var(--soft-border),
+    0 98px var(--soft-border),
+    0 147px var(--soft-border),
+    0 195px var(--soft-border);
+  pointer-events: none;
 }
 
 .grafic {
@@ -393,8 +421,6 @@ tbody tr:last-child td {
 .barra-escala {
   position: relative;
   height: 196px;
-  background-image: linear-gradient(to bottom, var(--soft-border) 1px, transparent 1px);
-  background-size: 100% 25%;
 }
 
 .total-barra {
