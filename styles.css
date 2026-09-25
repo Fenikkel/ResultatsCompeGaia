@@ -474,6 +474,7 @@ tbody tr:last-child td {
 .total-barra {
   position: absolute;
   right: 0;
+  bottom: 5px;
   left: 0;
   z-index: 1;
   color: var(--text);
@@ -481,6 +482,10 @@ tbody tr:last-child td {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
+  opacity: 0;
+  transition:
+    bottom 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease-out;
 }
 
 .barra-apilada {
@@ -493,6 +498,17 @@ tbody tr:last-child td {
   flex-direction: column;
   justify-content: flex-end;
   overflow: visible;
+  height: 0;
+  transition: height 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.grafic-animat .total-barra {
+  bottom: calc(var(--altura-barra) + 5px);
+  opacity: 1;
+}
+
+.grafic-animat .barra-apilada {
+  height: var(--altura-barra);
 }
 
 .segment {
@@ -635,6 +651,11 @@ tbody tr:last-child td {
   }
 
   .valor-segment {
+    transition: none;
+  }
+
+  .barra-apilada,
+  .total-barra {
     transition: none;
   }
 

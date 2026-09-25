@@ -72,6 +72,9 @@ let paginaRanquingActual = 0;
 let paginaGraficActual = 0;
 let versioAnimacioEstadistiques = 0;
 let observadorEstadistiques = null;
+let versioAnimacioGrafic = 0;
+let observadorGrafic = null;
+let graficVisible = false;
 
 function normalitzaResultat(fila) {
   const resultat = {
@@ -296,6 +299,50 @@ function calculaProblema(problema) {
   return { ...problema, zones, tops, total: zones + tops };
 }
 
+function animaBarresGrafic() {
+  versioAnimacioGrafic += 1;
+  const versio = versioAnimacioGrafic;
+  elements.grafic.classList.remove('grafic-animat');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (versio === versioAnimacioGrafic) {
+        elements.grafic.classList.add('grafic-animat');
+      }
+    });
+  });
+}
+
+function preparaAnimacioInicialGrafic() {
+  versioAnimacioGrafic += 1;
+  graficVisible = false;
+  elements.grafic.classList.remove('grafic-animat');
+
+  if (observadorGrafic) {
+    observadorGrafic.disconnect();
+    observadorGrafic = null;
+  }
+
+  function iniciaAnimacio() {
+    graficVisible = true;
+    animaBarresGrafic();
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    requestAnimationFrame(iniciaAnimacio);
+    return;
+  }
+
+  const observador = new IntersectionObserver(entrades => {
+    if (!entrades.some(entrada => entrada.isIntersecting)) return;
+    observador.disconnect();
+    if (observadorGrafic === observador) observadorGrafic = null;
+    iniciaAnimacio();
+  }, { threshold: 0.25 });
+  observadorGrafic = observador;
+  observador.observe(elements.grafic);
+}
+
 function creaBarra(dades, maxim) {
   const item = document.createElement('div');
   item.className = 'barra-item';
@@ -311,15 +358,14 @@ function creaBarra(dades, maxim) {
   escala.className = 'barra-escala';
 
   const percentatge = maxim > 0 ? (dades.total / maxim) * 100 : 0;
+  item.style.setProperty('--altura-barra', `${percentatge}%`);
   const total = document.createElement('span');
   total.className = 'total-barra';
   total.textContent = String(dades.total);
   total.setAttribute('aria-hidden', 'true');
-  total.style.bottom = `calc(${percentatge}% + 5px)`;
 
   const barra = document.createElement('div');
   barra.className = 'barra-apilada';
-  barra.style.height = `${percentatge}%`;
 
   if (dades.tops > 0) {
     const segmentTop = document.createElement('button');
@@ -377,6 +423,8 @@ function renderitzaGrafic(anuncia = false) {
     elements.anunciCanvis.textContent =
       `Gràfic. Pàgina ${paginaGraficActual + 1} de ${PAGINES_GRAFIC.length}.`;
   }
+
+  if (graficVisible) animaBarresGrafic();
 }
 
 function animaNumero(element, valorFinal, versio) {
@@ -460,6 +508,7 @@ function renderitzaEstadistiques() {
   const suma = resultats.reduce((acumulat, resultat) => acumulat + resultat.total, 0);
   const mitjana = total > 0 ? Math.round(suma / total) : 0;
   preparaAnimacioEstadistiques(total, mitjana);
+  preparaAnimacioInicialGrafic();
   renderitzaGrafic();
 }
 
