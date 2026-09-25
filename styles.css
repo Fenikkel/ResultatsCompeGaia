@@ -376,7 +376,18 @@ tbody tr:last-child td {
   position: relative;
   height: 220px;
   padding-top: 24px;
-  border-bottom: 1px solid var(--border);
+}
+
+.barra-area::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 4;
+  height: 1px;
+  background: var(--text);
+  pointer-events: none;
 }
 
 .barra-escala {
