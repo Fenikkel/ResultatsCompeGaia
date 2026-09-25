@@ -341,8 +341,8 @@ tbody tr:last-child td {
 
 .area-grafic {
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr);
-  gap: 4px;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 6px;
   min-width: 0;
 }
 
@@ -350,7 +350,7 @@ tbody tr:last-child td {
   position: relative;
   display: flex;
   height: 220px;
-  padding: 24px 10px 1px 0;
+  padding: 24px 8px 1px 0;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
@@ -375,7 +375,7 @@ tbody tr:last-child td {
   position: absolute;
   top: 24px;
   right: 0;
-  width: 7px;
+  width: 6px;
   height: 1px;
   background: var(--soft-border);
   box-shadow:
