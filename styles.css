@@ -46,10 +46,10 @@ button:focus-visible,
 .logo {
   display: block;
   width: 100%;
-  max-width: 134px;
-  max-height: 115px;
+  max-width: 176px;
+  max-height: 176px;
   height: auto;
-  margin: 0 auto 48px;
+  margin: 0 auto 12px;
   object-fit: contain;
 }
 
@@ -93,6 +93,28 @@ h2 {
 
 .missatge-error {
   border-color: var(--text);
+}
+
+.estat-carrega-actiu {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  border: 0;
+}
+
+.indicador-carrega {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--soft-border);
+  border-top-color: var(--text);
+  border-radius: 50%;
+  animation: gir-carrega 0.8s linear infinite;
+}
+
+@keyframes gir-carrega {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .boto-secundari {
@@ -228,21 +250,42 @@ tbody tr:last-child td {
 }
 
 .resum-estadistiques > div {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   padding: 16px 12px;
   border: 1px solid var(--border);
+  text-align: center;
 }
 
 .resum-estadistiques dt {
+  order: 2;
+  min-height: 1.32rem;
+  margin-top: 4px;
   color: var(--muted);
   font-size: 0.88rem;
+  opacity: 0;
+  transform: translateY(4px);
 }
 
 .resum-estadistiques dd {
-  margin: 6px 0 0;
-  font-size: clamp(1.15rem, 5vw, 1.45rem);
+  order: 1;
+  margin: 0;
+  font-size: clamp(1.8rem, 8vw, 2.4rem);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.resum-estadistiques dt.etiqueta-visible {
+  animation: apareix-etiqueta 0.3s ease-out forwards;
+}
+
+@keyframes apareix-etiqueta {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .figura-grafic {
@@ -425,5 +468,18 @@ tbody tr:last-child td {
   *::before,
   *::after {
     scroll-behavior: auto !important;
+  }
+
+  .indicador-carrega {
+    animation: none;
+  }
+
+  .resum-estadistiques dt {
+    opacity: 1;
+    transform: none;
+  }
+
+  .resum-estadistiques dt.etiqueta-visible {
+    animation: none;
   }
 }

@@ -5,6 +5,7 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_dbfGWZXvN3cVWrYNnIE2tg_D-x-siVb
 const FILES_PER_REQUEST = 500;
 const RESULTATS_PER_PAGINA = 5;
 const TEMPS_MAXIM_CARREGA = 20000;
+const DURACIO_RECOMPTE = 900;
 const CATEGORIES = ['General', 'Femení', 'Masculí'];
 const CAMPS_PUBLICS = [
   'id', 'nombre', 'genero',
@@ -36,6 +37,7 @@ const PAGINES_GRAFIC = [
 
 const elements = {
   estatCarrega: document.getElementById('estat-carrega'),
+  indicadorCarrega: document.getElementById('indicador-carrega'),
   textEstat: document.getElementById('text-estat'),
   reintentar: document.getElementById('reintentar'),
   contingut: document.getElementById('contingut'),
@@ -46,8 +48,11 @@ const elements = {
   paginaRanquing: document.getElementById('pagina-ranquing'),
   ranquingAnterior: document.getElementById('ranquing-anterior'),
   ranquingSeguent: document.getElementById('ranquing-seguent'),
+  resumEstadistiques: document.getElementById('resum-estadistiques'),
   totalParticipants: document.getElementById('total-participants'),
+  etiquetaParticipants: document.getElementById('etiqueta-participants'),
   puntuacioMitjana: document.getElementById('puntuacio-mitjana'),
+  etiquetaMitjana: document.getElementById('etiqueta-mitjana'),
   maximEscala: document.getElementById('maxim-escala'),
   grafic: document.getElementById('grafic'),
   descripcioGrafic: document.getElementById('descripcio-grafic'),
@@ -64,6 +69,8 @@ let resultats = [];
 let categoriaActual = 'General';
 let paginaRanquingActual = 0;
 let paginaGraficActual = 0;
+let versioAnimacioEstadistiques = 0;
+let observadorEstadistiques = null;
 
 function normalitzaResultat(fila) {
   const resultat = {
@@ -309,12 +316,87 @@ function renderitzaGrafic(anuncia = false) {
   }
 }
 
+function animaNumero(element, valorFinal, versio) {
+  const redueixMoviment = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (redueixMoviment || valorFinal === 0) {
+    element.textContent = formatEnter.format(valorFinal);
+    return Promise.resolve();
+  }
+
+  element.textContent = '0';
+  const inici = performance.now();
+
+  return new Promise(resolve => {
+    function actualitza(ara) {
+      if (versio !== versioAnimacioEstadistiques) {
+        resolve();
+        return;
+      }
+
+      const progres = Math.min((ara - inici) / DURACIO_RECOMPTE, 1);
+      const suavitzat = 1 - Math.pow(1 - progres, 3);
+      const valorActual = Math.round(valorFinal * suavitzat);
+      element.textContent = formatEnter.format(valorActual);
+
+      if (progres < 1) {
+        requestAnimationFrame(actualitza);
+      } else {
+        resolve();
+      }
+    }
+
+    requestAnimationFrame(actualitza);
+  });
+}
+
+function animaEstadistica(element, etiqueta, valorFinal, versio) {
+  etiqueta.classList.remove('etiqueta-visible');
+  animaNumero(element, valorFinal, versio).then(() => {
+    if (versio === versioAnimacioEstadistiques) {
+      etiqueta.classList.add('etiqueta-visible');
+    }
+  });
+}
+
+function preparaAnimacioEstadistiques(total, mitjana) {
+  versioAnimacioEstadistiques += 1;
+  const versio = versioAnimacioEstadistiques;
+
+  if (observadorEstadistiques) {
+    observadorEstadistiques.disconnect();
+    observadorEstadistiques = null;
+  }
+
+  elements.totalParticipants.textContent = '0';
+  elements.puntuacioMitjana.textContent = '0';
+  elements.etiquetaParticipants.classList.remove('etiqueta-visible');
+  elements.etiquetaMitjana.classList.remove('etiqueta-visible');
+
+  function iniciaAnimacio() {
+    animaEstadistica(elements.totalParticipants, elements.etiquetaParticipants, total, versio);
+    animaEstadistica(elements.puntuacioMitjana, elements.etiquetaMitjana, mitjana, versio);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    iniciaAnimacio();
+    return;
+  }
+
+  const observador = new IntersectionObserver(entrades => {
+    if (!entrades.some(entrada => entrada.isIntersecting)) return;
+    observador.disconnect();
+    if (observadorEstadistiques === observador) observadorEstadistiques = null;
+    iniciaAnimacio();
+  }, { threshold: 0.35 });
+  observadorEstadistiques = observador;
+  observador.observe(elements.resumEstadistiques);
+}
+
 function renderitzaEstadistiques() {
   const total = resultats.length;
   const suma = resultats.reduce((acumulat, resultat) => acumulat + resultat.total, 0);
-  const mitjana = total > 0 ? suma / total : 0;
-  elements.totalParticipants.textContent = String(total);
-  elements.puntuacioMitjana.textContent = `${formatEnter.format(Math.round(mitjana))} punts`;
+  const mitjana = total > 0 ? Math.round(suma / total) : 0;
+  preparaAnimacioEstadistiques(total, mitjana);
   renderitzaGrafic();
 }
 
@@ -327,16 +409,22 @@ function renderitzaTot() {
 function mostraCarrega() {
   elements.contingut.hidden = true;
   elements.estatCarrega.hidden = false;
+  elements.estatCarrega.classList.add('estat-carrega-actiu');
   elements.estatCarrega.classList.remove('missatge-error');
   elements.estatCarrega.setAttribute('aria-busy', 'true');
+  elements.indicadorCarrega.hidden = false;
+  elements.textEstat.classList.add('visually-hidden');
   elements.textEstat.textContent = 'Carregant resultats…';
   elements.reintentar.hidden = true;
 }
 
 function mostraError(error) {
   console.error('No s’han pogut carregar els resultats:', error);
+  elements.estatCarrega.classList.remove('estat-carrega-actiu');
   elements.estatCarrega.classList.add('missatge-error');
   elements.estatCarrega.removeAttribute('aria-busy');
+  elements.indicadorCarrega.hidden = true;
+  elements.textEstat.classList.remove('visually-hidden');
   elements.textEstat.textContent = error.name === 'AbortError'
     ? 'La connexió ha tardat massa. Torna-ho a provar.'
     : 'No s’han pogut carregar els resultats. Comprova la connexió i torna-ho a provar.';

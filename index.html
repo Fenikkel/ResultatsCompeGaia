@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Rànquing i estadístiques de la competició de socis de Gaia Climb d’octubre de 2026.">
   <title>Resultats competició socis octubre 2026 · Gaia Climb</title>
-  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js?v=3" defer></script>
+  <link rel="icon" type="image/svg+xml" href="Gaia.svg?v=1">
+  <link rel="stylesheet" href="styles.css?v=6">
+  <script src="script.js?v=6" defer></script>
 </head>
 <body>
   <main>
     <header class="capcalera">
-      <img class="logo" src="LogoGaia.svg" alt="Gaia Climb" width="134" height="115">
+      <img class="logo" src="Gaia.svg" alt="Gaia Climb" width="176" height="176">
       <h1>
         <span class="titol-principal">Competició socis</span>
         <span class="titol-secundari">octubre 2026</span>
@@ -23,8 +23,9 @@
       <p class="missatge missatge-error">Cal activar JavaScript per a consultar els resultats.</p>
     </noscript>
 
-    <section id="estat-carrega" class="missatge" aria-live="polite" aria-atomic="true" hidden>
-      <p id="text-estat">Carregant resultats…</p>
+    <section id="estat-carrega" class="missatge estat-carrega-actiu" aria-live="polite" aria-atomic="true" hidden>
+      <span id="indicador-carrega" class="indicador-carrega" aria-hidden="true"></span>
+      <p id="text-estat" class="visually-hidden">Carregant resultats…</p>
       <button id="reintentar" class="boto-secundari" type="button" hidden>Torna-ho a provar</button>
     </section>
 
@@ -76,14 +77,14 @@
       <section class="seccio" aria-labelledby="titol-estadistiques">
         <h2 id="titol-estadistiques">Estadístiques</h2>
 
-        <dl class="resum-estadistiques">
+        <dl id="resum-estadistiques" class="resum-estadistiques">
           <div>
-            <dt>Participants</dt>
+            <dt id="etiqueta-participants" class="etiqueta-estadistica">participants</dt>
             <dd id="total-participants">0</dd>
           </div>
           <div>
-            <dt>Puntuació mitjana</dt>
-            <dd id="puntuacio-mitjana">0 punts</dd>
+            <dt id="etiqueta-mitjana" class="etiqueta-estadistica">punts de mitja</dt>
+            <dd id="puntuacio-mitjana">0</dd>
           </div>
         </dl>
 
