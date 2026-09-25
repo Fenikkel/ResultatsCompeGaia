@@ -57,10 +57,7 @@ const elements = {
   anunciCanvis: document.getElementById('anunci-canvis')
 };
 
-const formatDecimal = new Intl.NumberFormat('ca-ES', {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1
-});
+const formatEnter = new Intl.NumberFormat('ca-ES', { maximumFractionDigits: 0 });
 const ordenaNoms = new Intl.Collator('ca-ES', { sensitivity: 'base', numeric: true });
 
 let resultats = [];
@@ -193,7 +190,8 @@ function renderitzaRanquing(anuncia = false) {
   }
 
   const paginaVisible = totalPagines === 0 ? 0 : paginaRanquingActual + 1;
-  elements.paginaRanquing.textContent = `Pàgina ${paginaVisible} de ${totalPagines}`;
+  elements.paginaRanquing.textContent = `${paginaVisible}/${totalPagines}`;
+  elements.paginaRanquing.setAttribute('aria-label', `Pàgina ${paginaVisible} de ${totalPagines}`);
   elements.ranquingAnterior.disabled = paginaRanquingActual <= 0;
   elements.ranquingSeguent.disabled = totalPagines === 0 || paginaRanquingActual >= totalPagines - 1;
   elements.panellRanquing.setAttribute('aria-label', `Rànquing ${categoriaActual}`);
@@ -294,7 +292,11 @@ function renderitzaGrafic(anuncia = false) {
   const maxim = resultats.length;
   elements.grafic.replaceChildren(...problemes.map(problema => creaBarra(calculaProblema(problema), maxim)));
   elements.maximEscala.textContent = String(maxim);
-  elements.paginaGrafic.textContent = `Pàgina ${paginaGraficActual + 1} de ${PAGINES_GRAFIC.length}`;
+  elements.paginaGrafic.textContent = `${paginaGraficActual + 1}/${PAGINES_GRAFIC.length}`;
+  elements.paginaGrafic.setAttribute(
+    'aria-label',
+    `Pàgina ${paginaGraficActual + 1} de ${PAGINES_GRAFIC.length}`
+  );
   elements.graficAnterior.disabled = paginaGraficActual === 0;
   elements.graficSeguent.disabled = paginaGraficActual === PAGINES_GRAFIC.length - 1;
   elements.descripcioGrafic.textContent =
@@ -312,7 +314,7 @@ function renderitzaEstadistiques() {
   const suma = resultats.reduce((acumulat, resultat) => acumulat + resultat.total, 0);
   const mitjana = total > 0 ? suma / total : 0;
   elements.totalParticipants.textContent = String(total);
-  elements.puntuacioMitjana.textContent = `${formatDecimal.format(mitjana)} punts`;
+  elements.puntuacioMitjana.textContent = `${formatEnter.format(Math.round(mitjana))} punts`;
   renderitzaGrafic();
 }
 

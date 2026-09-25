@@ -40,4 +40,4 @@ Comprovacions principals:
 
 ## Publicació
 
-Es pot publicar directament amb GitHub Pages: en la configuració del repositori, selecciona **Pages → Deploy from a branch**, la branca corresponent i la carpeta **/(root)**. Els fitxers necessaris són `index.html`, `styles.css`, `script.js`, `LOGO.png` i `favicon.png`.
+Es pot publicar directament amb GitHub Pages: en la configuració del repositori, selecciona **Pages → Deploy from a branch**, la branca corresponent i la carpeta **/(root)**. Els fitxers necessaris són `index.html`, `styles.css`, `script.js`, `LogoGaia.svg` i `favicon.png`.

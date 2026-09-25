@@ -46,8 +46,8 @@ button:focus-visible,
 .logo {
   display: block;
   width: 100%;
-  max-width: 256px;
-  max-height: 256px;
+  max-width: 134px;
+  max-height: 115px;
   height: auto;
   margin: 0 auto 48px;
   object-fit: contain;
@@ -58,6 +58,18 @@ h1 {
   margin: 0 auto;
   font-size: clamp(1.55rem, 7vw, 2rem);
   line-height: 1.2;
+}
+
+.titol-principal,
+.titol-secundari {
+  display: block;
+}
+
+.titol-secundari {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.68em;
+  font-weight: 500;
 }
 
 h2 {

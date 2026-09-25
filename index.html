@@ -7,13 +7,16 @@
   <title>Resultats competició socis octubre 2026 · Gaia Climb</title>
   <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
   <link rel="stylesheet" href="styles.css">
-  <script src="script.js" defer></script>
+  <script src="script.js?v=3" defer></script>
 </head>
 <body>
   <main>
     <header class="capcalera">
-      <img class="logo" src="LOGO.png" alt="Gaia Climb" width="355" height="315">
-      <h1>Resultats competició socis octubre 2026</h1>
+      <img class="logo" src="LogoGaia.svg" alt="Gaia Climb" width="134" height="115">
+      <h1>
+        <span class="titol-principal">Competició socis</span>
+        <span class="titol-secundari">octubre 2026</span>
+      </h1>
     </header>
 
     <noscript>
@@ -65,7 +68,7 @@
 
         <nav class="paginacio" aria-label="Paginació del rànquing">
           <button id="ranquing-anterior" class="boto-fletxa" type="button" aria-label="Pàgina anterior del rànquing">←</button>
-          <span id="pagina-ranquing" class="indicador-pagina" aria-live="polite">Pàgina 0 de 0</span>
+          <span id="pagina-ranquing" class="indicador-pagina" aria-live="polite" aria-label="Pàgina 0 de 0">0/0</span>
           <button id="ranquing-seguent" class="boto-fletxa" type="button" aria-label="Pàgina següent del rànquing">→</button>
         </nav>
       </section>
@@ -80,7 +83,7 @@
           </div>
           <div>
             <dt>Puntuació mitjana</dt>
-            <dd id="puntuacio-mitjana">0,0 punts</dd>
+            <dd id="puntuacio-mitjana">0 punts</dd>
           </div>
         </dl>
 
@@ -105,7 +108,7 @@
 
           <nav class="paginacio" aria-label="Paginació del gràfic">
             <button id="grafic-anterior" class="boto-fletxa" type="button" aria-label="Pàgina anterior del gràfic">←</button>
-            <span id="pagina-grafic" class="indicador-pagina" aria-live="polite">Pàgina 1 de 3</span>
+            <span id="pagina-grafic" class="indicador-pagina" aria-live="polite" aria-label="Pàgina 1 de 3">1/3</span>
             <button id="grafic-seguent" class="boto-fletxa" type="button" aria-label="Pàgina següent del gràfic">→</button>
           </nav>
         </figure>
