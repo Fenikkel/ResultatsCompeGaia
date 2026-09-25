@@ -225,12 +225,20 @@ tbody tr:last-child td {
   min-height: 48px;
   padding: 0;
   border: 1px solid var(--text);
-  background: var(--text);
-  color: var(--background);
+  background: var(--background);
+  color: var(--text);
   font-size: 1.35rem;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
+}
+
+.boto-fletxa:hover,
+.boto-fletxa:focus-visible,
+.boto-fletxa:active {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--background);
 }
 
 .boto-fletxa:disabled {
