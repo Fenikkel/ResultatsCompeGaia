@@ -4,10 +4,10 @@
   --muted: #5c5c5c;
   --border: #666;
   --soft-border: #d7d7d7;
-  --zone: #92c39d;
-  --top: #d38cb3;
-  --zone-active: color-mix(in srgb, var(--zone) 75%, black);
-  --top-active: color-mix(in srgb, var(--top) 75%, black);
+  --zone: #B8D9BF;
+  --top: #92c39d; 
+  --zone-active: color-mix(in srgb, var(--zone) 95%, black);
+  --top-active: color-mix(in srgb, var(--top) 95%, black);
   --focus: #005fcc;
   --background: #fff;
 }
