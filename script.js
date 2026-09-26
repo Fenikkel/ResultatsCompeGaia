@@ -500,12 +500,12 @@ function animaNumero(element, valorFinal, versio) {
 }
 
 function animaEstadistica(element, etiqueta, valorFinal, versio) {
-  etiqueta.classList.remove('etiqueta-visible');
-  animaNumero(element, valorFinal, versio).then(() => {
+  animaNumero(element, valorFinal, versio);
+  setTimeout(() => {
     if (versio === versioAnimacioEstadistiques) {
       etiqueta.classList.add('etiqueta-visible');
     }
-  });
+  }, 300);
 }
 
 function preparaAnimacioEstadistiques(total, mitjana) {
