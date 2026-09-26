@@ -6,6 +6,8 @@ const FILES_PER_REQUEST = 500;
 const RESULTATS_PER_PAGINA = 5;
 const TEMPS_MAXIM_CARREGA = 20000;
 const DURACIO_RECOMPTE = 900;
+const DURACIO_FILA_RANQUING = 320;
+const INTERVAL_FILA_RANQUING = 100;
 const LLAVOR_BLOBS = String(Date.now());
 const CATEGORIES = ['General', 'Femení', 'Masculí'];
 const CAMPS_PUBLICS = [
@@ -75,6 +77,7 @@ let observadorEstadistiques = null;
 let versioAnimacioGrafic = 0;
 let observadorGrafic = null;
 let graficVisible = false;
+let versioAnimacioRanquing = 0;
 
 function normalitzaResultat(fila) {
   const resultat = {
@@ -189,6 +192,10 @@ function creaBlobRanquing(resultat) {
   const blob = document.createElement('span');
   blob.className = `blob-ranquing blob-posicio-${resultat.posicio}`;
   blob.setAttribute('aria-hidden', 'true');
+  blob.style.setProperty('--retard-pop-blob', `${(resultat.posicio - 1) * 140}ms`);
+
+  const forma = document.createElement('span');
+  forma.className = 'forma-blob';
 
   const aleatori = creaGenerador(hashText(`${LLAVOR_BLOBS}-${resultat.id}-${resultat.posicio}`));
   function creaForma() {
@@ -196,16 +203,45 @@ function creaBlobRanquing(resultat) {
     return `${radis.slice(0, 4).join(' ')} / ${radis.slice(4).join(' ')}`;
   }
 
-  blob.style.setProperty('--forma-blob-a', creaForma());
-  blob.style.setProperty('--forma-blob-b', creaForma());
-  blob.style.setProperty('--gir-blob-a', `${Math.round(-18 + aleatori() * 36)}deg`);
-  blob.style.setProperty('--gir-blob-b', `${Math.round(-18 + aleatori() * 36)}deg`);
-  blob.style.setProperty('--escala-x-blob-a', (0.85 + aleatori() * 0.3).toFixed(2));
-  blob.style.setProperty('--escala-y-blob-a', (0.85 + aleatori() * 0.3).toFixed(2));
-  blob.style.setProperty('--escala-x-blob-b', (0.85 + aleatori() * 0.3).toFixed(2));
-  blob.style.setProperty('--escala-y-blob-b', (0.85 + aleatori() * 0.3).toFixed(2));
-  blob.style.setProperty('--retard-blob', `${(-aleatori() * 9).toFixed(2)}s`);
+  for (const variant of ['a', 'b', 'c', 'd']) {
+    forma.style.setProperty(`--forma-blob-${variant}`, creaForma());
+    forma.style.setProperty(`--gir-blob-${variant}`, `${Math.round(-18 + aleatori() * 36)}deg`);
+    forma.style.setProperty(`--escala-x-blob-${variant}`, (0.85 + aleatori() * 0.3).toFixed(2));
+    forma.style.setProperty(`--escala-y-blob-${variant}`, (0.85 + aleatori() * 0.3).toFixed(2));
+  }
+  forma.style.setProperty('--retard-blob', `${(-aleatori() * 9).toFixed(2)}s`);
+  blob.append(forma);
   return blob;
+}
+
+function animaRanquing() {
+  versioAnimacioRanquing += 1;
+  const versio = versioAnimacioRanquing;
+  const files = [...elements.cosRanquing.querySelectorAll('.fila-ranquing')];
+  elements.cosRanquing.classList.remove('ranquing-animat', 'blobs-ranquing-visibles');
+
+  files.forEach((fila, index) => {
+    fila.style.setProperty('--retard-fila', `${index * INTERVAL_FILA_RANQUING}ms`);
+  });
+
+  const redueixMoviment = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (redueixMoviment || files.length === 0) {
+    elements.cosRanquing.classList.add('ranquing-animat', 'blobs-ranquing-visibles');
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (versio !== versioAnimacioRanquing) return;
+      elements.cosRanquing.classList.add('ranquing-animat');
+      const duracioFiles = DURACIO_FILA_RANQUING + (files.length - 1) * INTERVAL_FILA_RANQUING;
+      setTimeout(() => {
+        if (versio === versioAnimacioRanquing) {
+          elements.cosRanquing.classList.add('blobs-ranquing-visibles');
+        }
+      }, duracioFiles);
+    });
+  });
 }
 
 function creaCeldaPuntuacio(resultat) {
@@ -245,6 +281,7 @@ function renderitzaRanquing(anuncia = false) {
     const pagina = ranquing.slice(inici, inici + RESULTATS_PER_PAGINA);
     for (const resultat of pagina) {
       const fila = document.createElement('tr');
+      fila.className = 'fila-ranquing';
       fila.append(creaCelda(String(resultat.posicio)));
 
       const celdaNom = document.createElement('td');
@@ -257,6 +294,8 @@ function renderitzaRanquing(anuncia = false) {
       elements.cosRanquing.append(fila);
     }
   }
+
+  animaRanquing();
 
   const paginaVisible = totalPagines === 0 ? 0 : paginaRanquingActual + 1;
   elements.paginaRanquing.textContent = `${paginaVisible}/${totalPagines}`;
@@ -338,7 +377,7 @@ function preparaAnimacioInicialGrafic() {
     observador.disconnect();
     if (observadorGrafic === observador) observadorGrafic = null;
     iniciaAnimacio();
-  }, { threshold: 0.25 });
+  }, { threshold: 0.6 });
   observadorGrafic = observador;
   observador.observe(elements.grafic);
 }
