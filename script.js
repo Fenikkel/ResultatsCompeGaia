@@ -377,7 +377,7 @@ function preparaAnimacioInicialGrafic() {
     observador.disconnect();
     if (observadorGrafic === observador) observadorGrafic = null;
     iniciaAnimacio();
-  }, { threshold: 0.6 });
+  }, { threshold: 0.9 });
   observadorGrafic = observador;
   observador.observe(elements.grafic);
 }
@@ -537,7 +537,7 @@ function preparaAnimacioEstadistiques(total, mitjana) {
     observador.disconnect();
     if (observadorEstadistiques === observador) observadorEstadistiques = null;
     iniciaAnimacio();
-  }, { threshold: 0.35 });
+  }, { threshold: 0.8 });
   observadorEstadistiques = observador;
   observador.observe(elements.resumEstadistiques);
 }
